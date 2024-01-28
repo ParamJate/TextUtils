@@ -48,23 +48,38 @@ export default function Textform(props) {
         navigator.clipboard.writeText(text.value)
         props.showAlert("Text copied to clipboard", "success")
     }
+
+    const handleRemoveSpace = ()=>{
+        //  var text = document.getElementById("myBox")
+        //  return text.trim().split(/ +/).join(' ')
+        let newText = text.split(/[ ]+/)
+        setText(newText.join(" "))
+    }
     
     const handleOnChange = (e) => {
         setText(e.target.value) 
     }
     
+    const handleSpeech = ()=>{
+        let msg = new SpeechSynthesisUtterance()
+        msg.text = text
+        window.speechSynthesis.speak(msg)
+    }
+
     return (
         <>
         <div>
-            <div className="container my-3">                
+            <div className="container my-3">
                 <h1>{props.heading}</h1>
                 <textarea className="form-control my-3" placeholder="Enter Your Text here" value=
                 {text} onChange={handleOnChange} id="myBox" rows="10" style={{backgroundColor:props.mode==='light'?'white':'black', color:props.mode==='light'?'black':'white'}}></textarea>
-                <button className="btn btn-outline-success mx-1" onClick={handleUpClick}>Conver to UpperCase</button>
-                <button className="btn btn-outline-success mx-1" onClick={handleLoClick}>Conver to UpperCase</button>
-                <button className="btn btn-outline-success mx-1" onClick={handleClearClick}>Clear Text</button>
-                <button className="btn btn-outline-success mx-1" onClick={handleCopy}>Copy</button>
-                <button className="btn btn-outline-success mx-1" onClick={handleShowDialogue}>Find and Replace</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleUpClick}>Conver to UpperCase</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleLoClick}>Conver to UpperCase</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleClearClick}>Clear Text</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleCopy}>Copy</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleRemoveSpace}>Remove Extra Space</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleShowDialogue}>Find and Replace</button>
+                <button className="btn btn-outline-success mx-1 my-1" onClick={handleSpeech}>Speak</button>
                 <style>
                 {`
                     ::placeholder{
@@ -87,7 +102,7 @@ export default function Textform(props) {
             )}
             <div className="container">
                 <h2>Text Summary</h2>
-                <p>{text.split(" ").length} Words and {text.length} characters</p>
+                <p>{text.split(" ").filter((elem)=>{return elem.length!==0}).length} Words and {text.length} characters</p>
                 <p>{0.08 * text.split(" ").length} Minutes to read</p>
                 <h2>Preview</h2>
                 <p>{text.length>0?text:"Enter something to preview here "}</p>
